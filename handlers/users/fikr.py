@@ -15,4 +15,3 @@ async def fikr_uchun(message:types.Message):
 async def hammasi_yoqdi(message: types.Message):
     await message.answer("O’z fikr va mulohazalaringizni yozma yoki audio xabar shaklida qoldiring.")
     
-    

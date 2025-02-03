@@ -16,7 +16,7 @@ menu_kb = ReplyKeyboardMarkup(
 
 
 
-@dp.message_handler(commands='start')
+@dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
     with open('images/beta.jpg', "rb") as photo:
         await message.answer_photo(
