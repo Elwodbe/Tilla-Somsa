@@ -4,7 +4,7 @@ from keyboards.default.somsalar import menyu_somsa
 from states.tilla_state import Xonachalar
 #import state FSMCONTEXT
 from aiogram.dispatcher import FSMContext
-from utils.db_api.database import search_somsa,update_busket,update_busket1
+from utils.db_api.database import search_somsa,update_busket,update_busket1,update_product_status
 
 
 @dp.message_handler(text='🍽 Menyu')
@@ -82,3 +82,11 @@ async def pilus_button(call:types.CallbackQuery):
 
     await call.message.edit_reply_markup(yangi_button1)
     
+@dp.callback_query_handler(text='buy',state="*")
+async def savtchaga_qoshish(call:types.CallbackQuery):
+    print(call.message.chat.id)
+    data = await update_product_status(user_id=call.message.chat.id,product_id=kichkina_savatcha.get(call.message.chat.id))
+    if data == True:
+        await call.answer("Savatchaga qo`shildi",show_alert=True)
+    else:
+        await call.answer("Qandaydir xatolik yuz berdi")

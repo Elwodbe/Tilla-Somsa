@@ -9,7 +9,6 @@ def create_database():
     cursor.execute("CREATE TABLE IF NOT EXISTS products(id INTEGER PRIMARY KEY AUTOINCREMENT,product_name TEXT,price INTEGER,image TEXT)")
     cursor.execute("CREATE TABLE IF NOT EXISTS busket_new(user_id TEXT,product_id INTEGER,count_product INTEGER,status TEXT)")
     cursor.execute("CREATE TABLE IF NOT EXISTS history(user_id TEXT,product_id INTEGER)")
-    print("Ishladi")
 
 create_database()
 
@@ -61,13 +60,12 @@ async def search_somsa(somsa_nomi):
 
 
 
-# cursor.execute("INSERT INTO products(product_name,price,image) VALUES(?,?,?)" ,("QOY GO'SHTI",10000,"qoy_gosht.jpg"))
-# cursor.execute('INSERT INTO products(product_name,price,image) VALUES (?,?,?)',("MOL GOSHTLI KATTA", 9000, "mol_gosh.jpg"))
-# cursor.execute('INSERT INTO products(product_name,price,image) VALUES (?,?,?)',("MOL GO'SHTLI KICHIK",7000,"mol_gosht.jpg"))
-# cursor.execute('INSERT INTO products(product_name,price,image) VALUES (?,?,?)',("TOVUQ SIRLI",7000,"tovuq_sir.jpg"))
-# cursor.execute("INSERT INTO products(product_name,price,image) VALUES(?,?,?)" ,("AVASHNOY",7000,"tandir.jpg"))
-# cursor.execute("INSERT INTO products(product_name,price,image) VALUES(?,?,?)" ,("KARTOSHKALI",5000,"kartoshka.jpg"))
-# cursor.execute("INSERT INTO products(product_name,price,image) VALUES(?,?,?)" ,("KO'KATLI",5000,"kokatli.jpg"))
-# cursor.execute("INSERT INTO products(product_name,price,image) VALUES(?,?,?)" ,("QOVOQLI",5000,"qovoq.jpg"))
+async def update_product_status(user_id,product_id,status='enabled'):
+    try: 
+        cursor.execute("UPDATE busket_new SET status=? WHERE user_id=? AND product_id=?", (status, user_id, product_id))
+        connect.commit()
+        return True
+    except:
+        return False
 
-# connect.commit()
+
