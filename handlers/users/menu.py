@@ -4,7 +4,7 @@ from keyboards.default.somsalar import menyu_somsa
 from states.tilla_state import Xonachalar
 #import state FSMCONTEXT
 from aiogram.dispatcher import FSMContext
-from utils.db_api.database import search_somsa,update_busket
+from utils.db_api.database import search_somsa,update_busket,update_busket1
 
 
 @dp.message_handler(text='🍽 Menyu')
@@ -60,5 +60,25 @@ async def pilus_button(call:types.CallbackQuery):
 
 )
     await call.message.edit_reply_markup(yangi_button)
-    
 
+
+@dp.callback_query_handler(text='minus',state="*")
+async def pilus_button(call:types.CallbackQuery):
+    data = await update_busket1(user_id=call.message.chat.id,product_id=kichkina_savatcha.get(call.message.chat.id),count_product=1,status='disabled')
+    yangi_button1 = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text="➖", callback_data="minus"),
+            InlineKeyboardButton(text=f"{data}", callback_data="natija"),
+            InlineKeyboardButton(text="➕", callback_data="pilus"),
+        ],
+        [
+            InlineKeyboardButton(text="Savatchaga qo`shish📥", callback_data="buy"),
+
+        ]
+    ]
+
+)
+
+    await call.message.edit_reply_markup(yangi_button1)
+    

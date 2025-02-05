@@ -28,6 +28,22 @@ async def update_busket(user_id, product_id, count_product=1, status='disabled')
         return 1
 
 
+async def update_busket1(user_id, product_id, count_product=1, status='disabled'):
+    b = cursor.execute('SELECT count_product FROM busket_new WHERE user_id=? AND product_id=?', (user_id, product_id))
+    result = b.fetchone()  # Natijani saqlab qo'yamiz
+
+    if result and result[0] > 0:  # Natijani to'g'ri tekshirish
+        yangi_count = result[0] - 1  # Oldingi qiymatga 1 qo'shamiz
+        cursor.execute('UPDATE busket_new SET count_product=? WHERE user_id=? AND product_id=?', (yangi_count, user_id, product_id))
+        connect.commit()
+        return yangi_count
+    else:
+        cursor.execute("INSERT INTO busket_new(user_id, product_id, count_product, status) VALUES(?,?,?,?)", (user_id, product_id, count_product, status))
+        connect.commit()
+        return yangi_count
+
+
+
 
 async def first_register(user_id,time):
     cursor.execute("INSERT INTO users_data(user_id,time)",(user_id,time))
