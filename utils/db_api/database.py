@@ -67,5 +67,16 @@ async def update_product_status(user_id,product_id,status='enabled'):
         return True
     except:
         return False
+async def savat_choiser(user_id,status='enabled'):
+    cursor.execute("SELECT * FROM busket_new WHERE user_id=? AND status=?", (user_id, status))
+    return cursor.fetchall()
 
 
+async def somsa_nomi_qidir(id):
+    cursor.execute("SELECT product_name,price FROM products WHERE id=?", (id,))
+    return cursor.fetchone()
+
+
+
+# cursor.execute("DELETE FROM busket_new WHERE status=?",('disabled',))
+# connect.commit()

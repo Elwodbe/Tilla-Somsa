@@ -18,7 +18,21 @@ menyu_somsa = ReplyKeyboardMarkup(
         [
         KeyboardButton("KO'KATLI"),
             KeyboardButton("QOVOQLI")
+        ],
+        [
+            KeyboardButton('🔙 Orqaga')
         ]
+    ],
+    resize_keyboard=True
+)
+
+
+menu_kb = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton("🍽 Menyu")],
+        [KeyboardButton('🔁Buyurtmalar tarixi'), KeyboardButton("Savatcha")],
+        [KeyboardButton("ℹ️ Ma'lumot"), KeyboardButton("☎️ Biz bilan aloqa")],
+        [KeyboardButton("✍️ Fikr bildirish"),KeyboardButton("⚙️Sozlamalar")]
     ],
     resize_keyboard=True
 )

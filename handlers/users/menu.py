@@ -4,8 +4,8 @@ from keyboards.default.somsalar import menyu_somsa
 from states.tilla_state import Xonachalar
 #import state FSMCONTEXT
 from aiogram.dispatcher import FSMContext
-from utils.db_api.database import search_somsa,update_busket,update_busket1,update_product_status
-
+from utils.db_api.database import search_somsa,update_busket,update_busket1,update_product_status,savat_choiser,somsa_nomi_qidir
+from keyboards.default.somsalar import menu_kb
 
 @dp.message_handler(text='🍽 Menyu')
 async def menyu_uchun(message:types.Message):
@@ -14,6 +14,33 @@ async def menyu_uchun(message:types.Message):
 
 from keyboards.inline.all_inline import choiser
 kichkina_savatcha = {}
+
+
+
+@dp.message_handler(text='🔙 Orqaga',state='*')
+async def orqaga_button(message:types.Message):
+    await message.answer("Orqaga qayding",reply_markup=menu_kb)
+
+cart = {}  # Foydalanuvchilar uchun savatcha
+
+
+@dp.message_handler(text="Savatcha",state='*')
+async def savatcha(message:types.Message):
+    user_id = message.from_user.id
+    data = await savat_choiser(user_id=user_id)
+
+    txt = ""
+    for i in data:
+
+        somsa_data = await somsa_nomi_qidir(i[1])
+        print(somsa_data)
+        txt += f"🍽{somsa_data[0]} - {data[3]} -{somsa_data[1]*int(data[3])} so'm💸\n"
+    await message.answer(txt,parse_mode='HTML')
+    
+    
+
+
+
 
 @dp.message_handler(state=Xonachalar.choise_somsa)
 async def tanlangan_somsa(message: types.Message,state :FSMContext):
@@ -90,3 +117,5 @@ async def savtchaga_qoshish(call:types.CallbackQuery):
         await call.answer("Savatchaga qo`shildi",show_alert=True)
     else:
         await call.answer("Qandaydir xatolik yuz berdi")
+
+
