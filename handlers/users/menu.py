@@ -24,18 +24,23 @@ async def orqaga_button(message:types.Message):
 cart = {}  # Foydalanuvchilar uchun savatcha
 
 
-@dp.message_handler(text="Savatcha",state='*')
-async def savatcha(message:types.Message):
+@dp.message_handler(text="Savatcha", state='*')
+async def savatcha(message: types.Message):
     user_id = message.from_user.id
     data = await savat_choiser(user_id=user_id)
 
     txt = ""
     for i in data:
+        somsa_data = await somsa_nomi_qidir(i[1]) 
+        soni = int(i[2])  
+        narx = int(somsa_data[1])  
+        jami_narx = narx * soni 
 
-        somsa_data = await somsa_nomi_qidir(i[1])
-        print(somsa_data)
-        txt += f"🍽{somsa_data[0]} - {data[3]} -{somsa_data[1]*int(data[3])} so'm💸\n"
-    await message.answer(txt,parse_mode='HTML')
+        txt += f"🍽 {somsa_data[0]} - {soni} ta - {jami_narx} so'm💸\n"
+
+    await message.answer(txt, parse_mode='HTML')
+
+
     
     
 
