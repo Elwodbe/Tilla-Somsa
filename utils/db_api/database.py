@@ -8,7 +8,7 @@ def create_database():
     cursor.execute('CREATE TABLE IF NOT EXISTS users_data(user_id TEXT,phone TEXT NULL,time TEXT)')
     cursor.execute("CREATE TABLE IF NOT EXISTS products(id INTEGER PRIMARY KEY AUTOINCREMENT,product_name TEXT,price INTEGER,image TEXT)")
     cursor.execute("CREATE TABLE IF NOT EXISTS busket_new(user_id TEXT,product_id INTEGER,count_product INTEGER,status TEXT)")
-    cursor.execute("CREATE TABLE IF NOT EXISTS history(user_id TEXT,product_id INTEGER)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS history_new(user_id TEXT,product_id INTEGER,count INTEGER)")
 
 create_database()
 
@@ -74,6 +74,15 @@ async def savat_choiser(user_id,status='enabled'):
 
 async def somsa_nomi_qidir(id):
     cursor.execute("SELECT product_name,price FROM products WHERE id=?", (id,))
+    return cursor.fetchone()
+
+async def buyurtma_tarixi_tozalash(id,status='enabled'):
+    cursor.execute("DELETE FROM busket_new WHERE user_id=? AND status=?", (id,status))
+    connect.commit()
+    return 'Tozalandi'
+
+async def savat_tozalish(user_id, product_id):
+    cursor.execute("DELETE FROM busket_new WHERE user_id=? AND product_id=?", (user_id, product_id))
     return cursor.fetchone()
 
 

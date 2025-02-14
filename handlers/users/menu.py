@@ -4,8 +4,9 @@ from keyboards.default.somsalar import menyu_somsa
 from states.tilla_state import Xonachalar
 #import state FSMCONTEXT
 from aiogram.dispatcher import FSMContext
-from utils.db_api.database import search_somsa,update_busket,update_busket1,update_product_status,savat_choiser,somsa_nomi_qidir
+from utils.db_api.database import *
 from keyboards.default.somsalar import menu_kb
+
 
 @dp.message_handler(text='🍽 Menyu')
 async def menyu_uchun(message:types.Message):
@@ -24,21 +25,76 @@ async def orqaga_button(message:types.Message):
 cart = {}  # Foydalanuvchilar uchun savatcha
 
 
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import CallbackQuery
+
+
 @dp.message_handler(text="Savatcha", state='*')
 async def savatcha(message: types.Message):
-    user_id = message.from_user.id
-    data = await savat_choiser(user_id=user_id)
+    try:
+        user_id = message.from_user.id
+        data = await savat_choiser(user_id=user_id)
 
-    txt = ""
-    for i in data:
-        somsa_data = await somsa_nomi_qidir(i[1]) 
-        soni = int(i[2])  
-        narx = int(somsa_data[1])  
-        jami_narx = narx * soni 
+        txt = ""
+        for i in data:
+            somsa_data = await somsa_nomi_qidir(i[1]) 
+            soni = int(i[2])  
+            narx = int(somsa_data[1])  
+            jami_narx = narx * soni 
 
-        txt += f"🍽 {somsa_data[0]} - {soni} ta - {jami_narx} so'm💸\n"
+            txt += f"🍽 {somsa_data[0]} - {soni} ta - {jami_narx} so'm💸\n"
 
-    await message.answer(txt, parse_mode='HTML')
+        
+        keyboard = InlineKeyboardMarkup(row_width=2)
+        keyboard.add(
+            InlineKeyboardButton(text="Tozalash 🗑", callback_data="clear_cart"),
+            InlineKeyboardButton(text="Buyurtma berish ✅", callback_data="order_cart")
+        )
+
+        await message.answer(txt, parse_mode='HTML', reply_markup=keyboard)
+    except:
+        await message.answer("Savatcha bo`sh")
+
+
+
+
+@dp.callback_query_handler(text='clear_cart')
+async def clear_busket(call:types.CallbackQuery):
+    user_id = call.message.chat.id
+    await buyurtma_tarixi_tozalash(id=user_id)
+    await call.message.delete()
+    await call.message.answer('Savatcha tozalandi')
+
+# @dp.callback_query_handler(text='clear_cart',state='*')
+# async def clear_cart(call: CallbackQuery, state: FSMContext):
+#     await update_busket1(user_id=call.message.chat.id)
+#     await call.message.answer("Savatcha tozalandi")
+#     await savatcha(call.message)
+#     await orqaga_button(call.message)
+#     await state.finish()
+#     cart.clear()
+#     await call.message.answer("Savatcha tozalandi",reply_markup=menu_kb)
+
+    
+
+
+
+
+
+# @dp.message_handler(text="🔁Buyurtmalar tarixi", state='*')
+# async def savat_tozalish(message: types.Message, state: FSMContext):
+#     user_id = message.from_user.id
+#     data = await buyurtma_tarixi(user_id=user_id)
+#     txt = ""
+#     for i in data:
+#         txt += f"Xaridingiz uchun rahmat {i[0]} - {i[1]}"
+#         await message.answer(txt, parse_mode='HTML')
+    
+#     await orqaga_button(message)
+#     await state.finish()  
+#     cart.clear()
+
+
 
 
     
